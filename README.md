@@ -2,7 +2,7 @@ ofxWin8Touch
 ============
 
 This addon provides OpenFrameworks touch events on Windows 8 and above. It uses the new `WM_POINTER` events
-to obtain more detailed information about the touch, as well as providing improved touch event stability (compared with `WM_TOUCH`).
+to obtain more detailed information about the touch, as well as providing improved touch event stability and precision (compared with `WM_TOUCH`).
 
 The development of this addon was inspired by `ofxWin7` and later `ofxWinTouch`. The big difference is that this addon
 uses `WM_POINTER` (available since Windows 8), not `WM_TOUCH` (available since Windows 7). For some devices, this makes a big

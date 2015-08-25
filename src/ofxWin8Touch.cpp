@@ -113,9 +113,20 @@ static bool handlePointerEvent(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		return false; /* unsupported pointer type */
 	}
 
+	/* Use HIMETRIC positions for improved precision (subpixel) */
+	RECT himetricRect, displayRect;
+	if(GetPointerDeviceRects(pointer->sourceDevice, &himetricRect, &displayRect)
+	  && himetricRect.right - himetricRect.left > 0
+	  && himetricRect.bottom - himetricRect.top > 0) {
+		double x = ((double)pointer->ptHimetricLocation.x - himetricRect.left) / (himetricRect.right - himetricRect.left);
+		double y = ((double)pointer->ptHimetricLocation.y - himetricRect.top) / (himetricRect.bottom - himetricRect.top);
+		touch.x = displayRect.left + x * (displayRect.right - displayRect.left) - ofGetWindowPositionX();
+		touch.y = displayRect.top + y * (displayRect.bottom - displayRect.top) - ofGetWindowPositionY();
+	} else {
+		touch.x = pointer->ptPixelLocation.x - ofGetWindowPositionX();
+		touch.y = pointer->ptPixelLocation.y - ofGetWindowPositionY();
+	}
 	touch.id = pointer->pointerId;
-	touch.x = pointer->ptPixelLocation.x - ofGetWindowPositionX();
-	touch.y = pointer->ptPixelLocation.y - ofGetWindowPositionY();
 	if(pointer->pointerFlags & (POINTER_FLAG_CANCELED | POINTER_FLAG_CAPTURECHANGED)) {
 		/* Cancelled */
 		touch.type = ofTouchEventArgs::Type::cancel;
